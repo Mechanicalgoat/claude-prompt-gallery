@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude プロンプトギャラリー | AIプロンプトのベストプラクティス集</title>
+    <meta name="description" content="AIアシスタントClaudeを最大限に活用するためのプロンプト事例集。ビジネス、クリエイティブ、学術など様々なジャンルの実用テンプレートを無料で公開。">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #7b56a0;
+            --primary-light: #9e7bbd;
+            --primary-dark: #5c4178;
+            --secondary: #56a0a0;
+            --dark: #2a2a2a;
+            --light: #f9f9f9;
+            --gray: #e5e5e5;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        /* Header styles */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .header-nav a {
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            border: 1px solid var(--gray);
+            border-radius: 50px;
+            outline: none;
+            transition: var(--transition);
+            width: 200px;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            width: 250px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .cta-button {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        /* Hero section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 8rem 2rem 6rem;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-primary-btn {
+            background-color: white;
+            color: var(--primary);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-secondary-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .hero-secondary-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Main content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .filters-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-button {
+            background-color: white;
+            border: 1px solid var(--gray);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .filter-button.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .filter-button:hover:not(.active) {
+            background-color: var(--gray);
+        }
+
+        .view-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-option {
+            background-color: white;
+            border: 1px solid var(--gray);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+        }
+
+        .view-option.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Prompt grid */
+        .prompt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .prompt-card {
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-image {
+            height: 160px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .prompt-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-category {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-premium {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--warning);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-description {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #777;
+        }
+
+        .card-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .author-avatar {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .card-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .card-actions {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 40px;
+            gap: 0.5rem;
+        }
+
+        .view-prompt-btn {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            border-radius: var(--radius);
+            font-weight: 500;
+        }
+
+        .view-prompt-btn:hover {
+            background-color: var(--primary);
+        }
+
+        .save-btn {
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+        }
+
+        .save-btn:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .save-btn.saved {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* List view */
+        .prompt-list {
+            display: none; /* Hidden by default, shown when list view is active */
+        }
+
+        .list-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1.5rem;
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .list-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-image {
+            width: 120px;
+            height: 80px;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .list-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .list-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .list-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .list-description {
+            font-size: 0.9rem;
+            color: #555;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .list-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #777;
+            margin-top: 0.5rem;
+        }
+
+        .list-category {
+            background-color: var(--gray);
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+
+        .list-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid var(--gray);
+            border-radius: var(--radius);
+        }
+
+        .page-btn.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: var(--gray);
+        }
+
+        /* Premium banner */
+        .premium-banner {
+            background: linear-gradient(135deg, #f5a623 0%, #f27059 100%);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 4rem 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .premium-bg {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M100 15L120 60L170 70L135 105L145 155L100 130L55 155L65 105L30 70L80 60L100 15Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .premium-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .premium-info {
+            flex: 2;
+        }
+
+        .premium-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .premium-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .premium-features {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .premium-cta {
+            flex: 1;
+            text-align: center;
+        }
+
+        .premium-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            font-weight: normal;
+            opacity: 0.7;
+        }
+
+        .premium-btn {
+            background-color: white;
+            color: #f27059;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        .premium-btn:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-light);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #bbb;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: var(--radius) 0 0 var(--radius);
+            outline: none;
+        }
+
+        .newsletter-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .newsletter-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom a {
+            color: #bbb;
+        }
+
+        .footer-bottom a:hover {
+            color: white;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--radius);
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            font-size: 1.5rem;
+            color: #777;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: var(--dark);
+        }
+
+        .modal-content {
+            padding: 1.5rem;
+        }
+
+        .prompt-details {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .prompt-description-full {
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-tag {
+            background-color: var(--gray);
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+
+        .prompt-preview {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            font-family: 'Courier New', monospace;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .copy-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .prompt-sidebar {
+            border-left: 1px solid var(--gray);
+            padding-left: 2rem;
+        }
+
+        .prompt-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .author-info h4 {
+            font-weight: 600;
+        }
+
+        .author-info p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .prompt-stats-full {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--light);
+            padding: 1rem;
+            border-radius: var(--radius);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-name {
+            font-size: 0.8rem;
+            color: #777;
+        }
+
+        .prompt-actions {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.8rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn.primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background-color: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--gray);
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .related-prompts {
+            margin-top: 2rem;
+        }
+
+        .related-prompts h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .related-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .related-item {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .related-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .related-image {
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .related-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .related-title {
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header-nav, .header-actions {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .premium-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .premium-features {
+                justify-content: center;
+            }
+
+            .prompt-details {
+                grid-template-columns: 1fr;
+            }
+
+            .prompt-sidebar {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid var(--gray);
+                padding-top: 1.5rem;
+            }
+
+            .list-item {
+                grid-template-columns: 1fr;
+            }
+
+            .list-image {
+                width: 100%;
+                height: 120px;
+            }
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 200;
+            padding: 2rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .close-menu {
+            background: none;
+            font-size: 1.5rem;
+        }
+
+        .mobile-menu-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-menu-nav a {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .mobile-menu-actions {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            z-index: 1000;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ1IiBmaWxsPSIjN2I1NmEwIi8+CjxwYXRoIGQ9Ik0yNiA1MGMwLTE1IDEwLTI0IDI0LTI0czI0IDkgMjQgMjRjMCAxNS0xMCAyNC0yNCAyNHMtMjQtOS0yNC0yNHoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIvPgo8Y2lyY2xlIGN4PSI0MiIgY3k9IjQyIiByPSI1IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI1OCIgY3k9IjQyIiByPSI1IiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNDIgNThjMCAwIDQgNiAxNiA2YzEyIDAgMTYtNiAxNi02IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" alt="Claude Prompts Logo">
+                <h1>Claude プロンプトギャラリー</h1>
+            </div>
+            
+            <nav class="header-nav">
+                <a href="#">ホーム</a>
+                <a href="#">カテゴリー</a>
+                <a href="#">最新</a>
+                <a href="#">人気</a>
+                <a href="#">プレミアム</a>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="プロンプトを検索...">
+                </div>
+                <a href="#premium" class="cta-button">プレミアムを入手</a>
+            </div>
+            
+            <button class="mobile-toggle" id="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+    
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ1IiBmaWxsPSIjN2I1NmEwIi8+CjxwYXRoIGQ9Ik0yNiA1MGMwLTE1IDEwLTI0IDI0LTI0czI0IDkgMjQgMjRjMCAxNS0xMCAyNC0yNCAyNHMtMjQtOS0yNC0yNHoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIvPgo8Y2lyY2xlIGN4PSI0MiIgY3k9IjQyIiByPSI1IiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI1OCIgY3k9IjQyIiByPSI1IiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNNDIgNThjMCAwIDQgNiAxNiA2YzEyIDAgMTYtNiAxNi02IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K" alt="Logo">
+                <h1>Claude Prompts</h1>
+            </div>
+            <button class="close-menu" id="close-menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <nav class="mobile-menu-nav">
+            <a href="#">ホーム</a>
+            <a href="#">カテゴリー</a>
+            <a href="#">最新</a>
+            <a href="#">人気</a>
+            <a href="#">プレミアム</a>
+        </nav>
+        
+        <div class="mobile-menu-actions">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="プロンプトを検索...">
+            </div>
+            <a href="#premium" class="cta-button">プレミアムを入手</a>
+        </div>
+    </div>
+    
+    <section class="hero">
+        <div class="hero-container">
+            <h2>AIアシスタントClaudeを最大限に活用するプロンプト事例集</h2>
+            <p>ビジネス、クリエイティブ、学術など様々なシーンで活用できるプロンプトテンプレートを無料で公開しています。</p>
+            
+            <div class="hero-buttons">
+                <button class="hero-primary-btn">ベストプロンプトを探す</button>
+                <button class="hero-secondary-btn">使い方ガイドを見る</button>
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">プロンプト</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">カテゴリー</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">50k+</div>
+                    <div class="stat-label">月間ユーザー</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <main class="main-content">
+        <div class="filters-container">
+            <div class="filter-buttons">
+                <button class="filter-button active" data-filter="all">すべて</button>
+                <button class="filter-button" data-filter="business">ビジネス</button>
+                <button class="filter-button" data-filter="creative">クリエイティブ</button>
+                <button class="filter-button" data-filter="academic">学術・研究</button>
+                <button class="filter-button" data-filter="programming">プログラミング</button>
+                <button class="filter-button" data-filter="writing">ライティング</button>
+                <button class="filter-button" data-filter="analysis">データ分析</button>
+                <button class="filter-button" data-filter="marketing">マーケティング</button>
+                <button class="filter-button" data-filter="personal">自己啓発</button>
+            </div>
+            
+            <div class="view-options">
+                <button class="view-option active" id="grid-view">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button class="view-option" id="list-view">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="prompt-grid" id="prompt-grid">
+            <!-- Business Prompts -->
+            <div class="prompt-card" data-category="business">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=600&h=400&auto=format&fit=crop" alt="ビジネス会議の様子">
+                    <span class="card-category">ビジネス</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">SWOT分析テンプレート</h3>
+                    <p class="card-description">ビジネスやプロジェクトの強み・弱み・機会・脅威を体系的に分析するための包括的なSWOT分析プロンプト。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar" class="author-avatar">
+                            <span>佐藤太郎</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 2.5k</span>
+                            <span><i class="far fa-heart"></i> 142</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="swot-analysis">テンプレートを見る</button>
+                        <button class="save-btn" data-id="swot-analysis"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="prompt-card" data-category="business">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=600&h=400&auto=format&fit=crop" alt="企画書を書く手">
+                    <span class="card-category">ビジネス</span>
+                    <span class="card-premium"><i class="fas fa-crown"></i> Premium</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">説得力のある企画書作成ガイド</h3>
+                    <p class="card-description">上司や投資家を納得させる企画書を作成するためのステップバイステップの指示プロンプト。実例と修正ポイントを含む。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar" class="author-avatar">
+                            <span>鈴木美咲</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 3.1k</span>
+                            <span><i class="far fa-heart"></i> 189</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="business-proposal">テンプレートを見る</button>
+                        <button class="save-btn" data-id="business-proposal"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Creative Prompts -->
+            <div class="prompt-card" data-category="creative">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&h=400&auto=format&fit=crop" alt="創造的な執筆">
+                    <span class="card-category">クリエイティブ</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">物語創作プロンプト</h3>
+                    <p class="card-description">魅力的なキャラクターと没入感のあるストーリーラインを持つ物語を作成するための詳細なプロンプト。ジャンルやトーンをカスタマイズ可能。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/men/76.jpg" alt="avatar" class="author-avatar">
+                            <span>田中誠</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 4.7k</span>
+                            <span><i class="far fa-heart"></i> 315</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="story-creation">テンプレートを見る</button>
+                        <button class="save-btn" data-id="story-creation"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="prompt-card" data-category="creative">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=600&h=400&auto=format&fit=crop" alt="アイデアブレインストーミング">
+                    <span class="card-category">クリエイティブ</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">アイデア発想ワークショップ</h3>
+                    <p class="card-description">創造的な思考を促進し、革新的なアイデアを生み出すための体系的なブレインストーミングプロンプト。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="avatar" class="author-avatar">
+                            <span>山田花子</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 2.9k</span>
+                            <span><i class="far fa-heart"></i> 176</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="idea-workshop">テンプレートを見る</button>
+                        <button class="save-btn" data-id="idea-workshop"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Academic Prompts -->
+            <div class="prompt-card" data-category="academic">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600&h=400&auto=format&fit=crop" alt="研究論文">
+                    <span class="card-category">学術・研究</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">研究論文レビューアシスタント</h3>
+                    <p class="card-description">研究論文の強み、弱み、方法論、結果、含意を体系的に分析するための包括的なレビュープロンプト。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="avatar" class="author-avatar">
+                            <span>木村教授</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 1.8k</span>
+                            <span><i class="far fa-heart"></i> 132</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="paper-review">テンプレートを見る</button>
+                        <button class="save-btn" data-id="paper-review"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Programming Prompts -->
+            <div class="prompt-card" data-category="programming">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=600&h=400&auto=format&fit=crop" alt="コードを書く手">
+                    <span class="card-category">プログラミング</span>
+                    <span class="card-premium"><i class="fas fa-crown"></i> Premium</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">コード最適化アドバイザー</h3>
+                    <p class="card-description">既存のコードをレビューし、パフォーマンス、可読性、保守性の観点から改善提案を行うための専門的なプロンプト。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/men/92.jpg" alt="avatar" class="author-avatar">
+                            <span>伊藤エンジニア</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 5.2k</span>
+                            <span><i class="far fa-heart"></i> 428</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="code-optimization">テンプレートを見る</button>
+                        <button class="save-btn" data-id="code-optimization"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Writing Prompts -->
+            <div class="prompt-card" data-category="writing">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&h=400&auto=format&fit=crop" alt="ノートに書く手">
+                    <span class="card-category">ライティング</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">説得力のあるブログ記事作成</h3>
+                    <p class="card-description">読者を引き込み、行動を促す魅力的なブログ記事を作成するためのステップバイステップガイド。SEO最適化のヒントも含む。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="avatar" class="author-avatar">
+                            <span>斎藤ライター</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 3.8k</span>
+                            <span><i class="far fa-heart"></i> 267</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="blog-writing">テンプレートを見る</button>
+                        <button class="save-btn" data-id="blog-writing"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analysis Prompts -->
+            <div class="prompt-card" data-category="analysis">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&h=400&auto=format&fit=crop" alt="データ分析">
+                    <span class="card-category">データ分析</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">データトレンド解析プロンプト</h3>
+                    <p class="card-description">データセットから意味のあるパターンとトレンドを抽出し、ビジネス洞察に変換するための構造化されたプロンプト。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="avatar" class="author-avatar">
+                            <span>高橋アナリスト</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 2.1k</span>
+                            <span><i class="far fa-heart"></i> 165</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="data-trends">テンプレートを見る</button>
+                        <button class="save-btn" data-id="data-trends"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Marketing Prompts -->
+            <div class="prompt-card" data-category="marketing">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=600&h=400&auto=format&fit=crop" alt="マーケティング戦略">
+                    <span class="card-category">マーケティング</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">コンテンツマーケティング戦略立案</h3>
+                    <p class="card-description">ターゲットオーディエンスに合わせた効果的なコンテンツマーケティング戦略を立案するための包括的なフレームワーク。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/women/15.jpg" alt="avatar" class="author-avatar">
+                            <span>中村マーケター</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 3.4k</span>
+                            <span><i class="far fa-heart"></i> 231</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="content-marketing">テンプレートを見る</button>
+                        <button class="save-btn" data-id="content-marketing"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Personal Development Prompts -->
+            <div class="prompt-card" data-category="personal">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=600&h=400&auto=format&fit=crop" alt="自己啓発">
+                    <span class="card-category">自己啓発</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">キャリア目標達成計画</h3>
+                    <p class="card-description">個人のキャリア目標を明確にし、それを達成するための具体的なステップを計画するための構造化されたプロンプト。</p>
+                    <div class="card-meta">
+                        <div class="card-author">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="avatar" class="author-avatar">
+                            <span>吉田キャリアコーチ</span>
+                        </div>
+                        <div class="card-stats">
+                            <span><i class="far fa-eye"></i> 2.7k</span>
+                            <span><i class="far fa-heart"></i> 198</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-prompt-btn" data-id="career-planning">テンプレートを見る</button>
+                        <button class="save-btn" data-id="career-planning"><i class="far fa-bookmark"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="prompt-list" id="prompt-list">
+            <!-- List view items will be dynamically generated in JavaScript -->
+        </div>
+        
+        <div class="pagination">
+            <button class="page-btn"><i class="fas fa-chevron-left"></i></button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">...</button>
+            <button class="page-btn">10</button>
+            <button class="page-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <section class="premium-banner" id="premium">
+            <div class="premium-bg"></div>
+            <div class="premium-container">
+                <div class="premium-content">
+                    <div class="premium-info">
+                        <h2 class="premium-title">プレミアムプロンプトコレクション</h2>
+                        <p class="premium-description">プロフェッショナルが作成した高品質なプロンプトテンプレート集。ビジネス、クリエイティブ、研究など、あらゆる分野で優れた結果を得るための独自のコレクション。</p>
+                        <div class="premium-features">
+                            <div class="premium-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>100+のプレミアムプロンプト</span>
+                            </div>
+                            <div class="premium-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>毎月の新規追加</span>
+                            </div>
+                            <div class="premium-feature">
+                                <i class="fas fa-check-circle"></i>
+                                <span>専門家のサポート</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="premium-cta">
+                        <div class="premium-price">
+                            ¥2,980<span class="price-period">/月</span>
+                        </div>
+                        <p>または¥29,800/年（2ヶ月分お得）</p>
+                        <a href="https://buy.stripe.com/your-premium-link" class="premium-btn" target="_blank">プレミアムを入手</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>Claude プロンプトギャラリー</h3>
+                <p>AIアシスタントClaudeを最大限に活用するためのプロンプト事例集。ビジネス、クリエイティブ、学術など様々なシーンで活用できるプロンプトテンプレートを提供しています。</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>クイックリンク</h3>
+                <ul class="footer-links">
+                    <li><a href="#">ホーム</a></li>
+                    <li><a href="#">カテゴリー一覧</a></li>
+                    <li><a href="#">最新プロンプト</a></li>
+                    <li><a href="#">人気プロンプト</a></li>
+                    <li><a href="#">プレミアムプラン</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>リソース</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Claudeの使い方ガイド</a></li>
+                    <li><a href="#">効果的なプロンプト作成法</a></li>
+                    <li><a href="#">プロンプトエンジニアリング入門</a></li>
+                    <li><a href="#">AIライティングのコツ</a></li>
+                    <li><a href="#">ブログ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>ニュースレター登録</h3>
+                <p>最新のプロンプトやAIの活用法についての情報を定期的にお届けします。</p>
+                <form class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="メールアドレスを入力">
+                    <button type="submit" class="newsletter-btn">登録</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div>© 2025 Claude プロンプトギャラリー. All rights reserved.</div>
+            <div>
+                <a href="#">プライバシーポリシー</a> | 
+                <a href="#">利用規約</a> | 
+                <a href="#">お問い合わせ</a>
+            </div>
+        </div>
+    </footer>
+    
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">プロンプトテンプレート</h2>
+                <button class="close-modal" id="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-content" id="modal-content">
+                <!-- Modal content will be dynamically inserted -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="toast" id="copy-toast">
+        <i class="fas fa-check-circle"></i>
+        <span>プロンプトをコピーしました！</span>
+    </div>
+    
+    <script>
+        // Define prompt templates data
+        const promptTemplates = {
+            "swot-analysis": {
+                title: "SWOT分析テンプレート",
+                category: "ビジネス",
+                description: "ビジネスやプロジェクトの強み・弱み・機会・脅威を体系的に分析するための包括的なSWOT分析プロンプト。",
+                fullDescription: "このプロンプトを使用すると、Claudeが詳細なSWOT分析を行い、ビジネス、製品、サービス、またはプロジェクトの強み、弱み、機会、脅威を特定するのに役立ちます。実用的な洞察と具体的な改善策の提案が含まれます。",
+                tags: ["ビジネス分析", "戦略計画", "プロジェクト評価", "競合分析"],
+                author: {
+                    name: "佐藤太郎",
+                    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+                    bio: "ビジネスストラテジスト | 経営コンサルタント | AI活用アドバイザー"
+                },
+                stats: {
+                    views: "2.5k",
+                    likes: "142",
+                    saves: "87",
+                    uses: "1.2k"
+                },
+                premium: false,
+                image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=600&h=400&auto=format&fit=crop",
+                prompt: `以下のビジネス/プロジェクト/製品について詳細なSWOT分析を行ってください：[分析対象]
+
+分析内容には以下を含めてください：
+
+## 強み (Strengths)
+- 内部的な長所と競争優位性
+- 独自の資源とケイパビリティ
+- 顧客から評価されている点
+
+## 弱み (Weaknesses)
+- 内部的な短所と制限
+- 競合と比較して劣っている点
+- 改善が必要な領域
+
+## 機会 (Opportunities)
+- 外部環境における有利な傾向や変化
+- 活用できる市場ギャップ
+- 新たな成長分野
+
+## 脅威 (Threats)
+- 外部環境における不利な傾向や変化
+- 競合の動向と市場圧力
+- リスク要因と課題
+
+## 総合評価と推奨アクション
+- SWOT要素間の相互関連性の分析
+- 強みを活かし、弱みを克服するための具体的な戦略提案
+- 短期・中期・長期で取るべきアクションの優先順位
+
+分析は具体的、実用的かつ実行可能なものにしてください。また、業界のトレンドとベストプラクティスを考慮した内容を期待します。`,
+                relatedPrompts: [
+                    {
+                        id: "business-proposal",
+                        title: "説得力のある企画書作成ガイド",
+                        image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "content-marketing",
+                        title: "コンテンツマーケティング戦略立案",
+                        image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "data-trends",
+                        title: "データトレンド解析プロンプト",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&h=400&auto=format&fit=crop"
+                    }
+                ]
+            },
+            "business-proposal": {
+                title: "説得力のある企画書作成ガイド",
+                category: "ビジネス",
+                description: "上司や投資家を納得させる企画書を作成するためのステップバイステップの指示プロンプト。実例と修正ポイントを含む。",
+                fullDescription: "このプロンプトは、説得力のある企画書を作成するためのガイドをClaudeから取得します。提案の目的を明確にし、ターゲットオーディエンスに響く内容と構成で、承認率を高める企画書の作成をサポートします。",
+                tags: ["ビジネス提案", "プレゼンテーション", "資金調達", "プロジェクト計画"],
+                author: {
+                    name: "鈴木美咲",
+                    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+                    bio: "スタートアップアドバイザー | ピッチコンサルタント | 元VC"
+                },
+                stats: {
+                    views: "3.1k",
+                    likes: "189",
+                    saves: "156",
+                    uses: "1.8k"
+                },
+                premium: true,
+                image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=600&h=400&auto=format&fit=crop",
+                prompt: `私は[目的：資金調達/プロジェクト承認/新規事業提案]のための企画書を作成しています。[対象者：上司/投資家/クライアント]を納得させるための説得力のある企画書を作成するためのガイドを提供してください。
+
+以下の内容を含めてください：
+
+## 企画書の基本構成
+- エグゼクティブサマリー：提案の簡潔な概要
+- 課題・背景：解決すべき問題や市場機会の説明
+- 提案内容：ソリューションや事業コンセプトの詳細
+- 市場分析：市場規模、ターゲット顧客、競合状況
+- 実行計画：タイムライン、必要リソース、主要マイルストーン
+- 財務計画：収益モデル、必要資金、投資回収計画
+- リスク分析と対策：潜在的課題と軽減策
+- 結論と次のステップ：行動喚起と決断を促す締めくくり
+
+## 各セクションのポイントと記載例
+- 具体的な数値や事実を含める箇所
+- 視覚的要素（グラフ、図表）の効果的な活用方法
+- 説得力を高めるための表現と論理構成
+- 共感を得るためのストーリーテリング要素
+
+## 説得力を高めるためのテクニック
+- ターゲットオーディエンスの関心事に合わせた内容のカスタマイズ
+- よくある反論への事前対応
+- 信頼性を高めるための裏付けと証拠の提示
+
+## 企画書のレビューと改善ポイント
+- 一般的な弱点とその改善方法
+- プロの視点からのチェックリスト
+
+具体例を交えながら、実践的で活用しやすいガイドを提供してください。`,
+                relatedPrompts: [
+                    {
+                        id: "swot-analysis",
+                        title: "SWOT分析テンプレート",
+                        image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "blog-writing",
+                        title: "説得力のあるブログ記事作成",
+                        image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "content-marketing",
+                        title: "コンテンツマーケティング戦略立案",
+                        image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=600&h=400&auto=format&fit=crop"
+                    }
+                ]
+            },
+            "story-creation": {
+                title: "物語創作プロンプト",
+                category: "クリエイティブ",
+                description: "魅力的なキャラクターと没入感のあるストーリーラインを持つ物語を作成するための詳細なプロンプト。ジャンルやトーンをカスタマイズ可能。",
+                fullDescription: "このプロンプトを使用すると、魅力的なキャラクター、没入感のあるストーリーライン、鮮明な世界観を持つオリジナルの物語をClaudeが創作します。ジャンル、トーン、テーマ、長さなど、様々な要素をカスタマイズできます。",
+                tags: ["物語創作", "フィクション", "キャラクター開発", "創造的ライティング"],
+                author: {
+                    name: "田中誠",
+                    avatar: "https://randomuser.me/api/portraits/men/76.jpg",
+                    bio: "小説家 | クリエイティブライティング講師 | ストーリーコンサルタント"
+                },
+                stats: {
+                    views: "4.7k",
+                    likes: "315",
+                    saves: "245",
+                    uses: "2.3k"
+                },
+                premium: false,
+                image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&h=400&auto=format&fit=crop",
+                prompt: `以下の要素に基づくオリジナルの短編小説を創作してください。
+
+## 物語の基本設定
+- ジャンル: [ファンタジー/SF/ミステリー/恋愛/ホラー/その他]
+- 対象読者: [年齢層や好み]
+- 長さ: [短編/中編/長編の指定や文字数]
+- トーン: [明るい/暗い/ユーモラス/シリアス/その他]
+
+## 重視する要素
+- キャラクター重視: 複雑で魅力的な人物像
+- プロット重視: 起承転結のある展開
+- 世界観重視: 独自の設定やルール
+- テーマ重視: 探求したいメッセージや問い
+
+## 含めたい具体的要素（任意）
+- 主人公の特徴: [性格、背景、能力など]
+- 舞台設定: [時代、場所、環境など]
+- 中心的な葛藤: [克服すべき課題や対立]
+- プロット要素: [重要な出来事や展開]
+- 特定のモチーフ: [繰り返し登場させたいシンボルや概念]
+
+## 創作の方針
+- 既存の作品やクリシェを避け、独創的な要素を取り入れる
+- キャラクターの内面や成長を描写
+- 五感を使った臨場感のある描写
+- 「語る」より「見せる」表現を重視
+- 伏線と回収を効果的に配置
+
+物語は導入、展開、クライマックス、結末という基本構造を持ち、読者が没入できる完結した体験を提供してください。`,
+                relatedPrompts: [
+                    {
+                        id: "idea-workshop",
+                        title: "アイデア発想ワークショップ",
+                        image: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "blog-writing",
+                        title: "説得力のあるブログ記事作成",
+                        image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&h=400&auto=format&fit=crop"
+                    }
+                ]
+            },
+            "idea-workshop": {
+                title: "アイデア発想ワークショップ",
+                category: "クリエイティブ",
+                description: "創造的な思考を促進し、革新的なアイデアを生み出すための体系的なブレインストーミングプロンプト。",
+                fullDescription: "このプロンプトを使用すると、Claudeが創造的な思考のプロセスをガイドし、革新的なアイデアを生み出すための多様なテクニックを提供します。ビジネス、芸術、問題解決など様々な分野で使用できます。",
+                tags: ["創造性", "イノベーション", "ブレインストーミング", "問題解決"],
+                author: {
+                    name: "山田花子",
+                    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+                    bio: "イノベーションコンサルタント | デザイン思考ファシリテーター | 創造性研究者"
+                },
+                stats: {
+                    views: "2.9k",
+                    likes: "176",
+                    saves: "120",
+                    uses: "1.5k"
+                },
+                premium: false,
+                image: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=600&h=400&auto=format&fit=crop",
+                prompt: `私は[目的：新製品開発/問題解決/コンテンツ企画/その他]のためのアイデアを生み出したいと考えています。創造的思考を促進し、革新的なアイデアを生み出すための体系的なブレインストーミングセッションをファシリテートしてください。
+
+## セッションの進行
+以下のステップに沿って、私との対話形式でアイデア発想のプロセスをガイドしてください：
+
+1. **課題明確化**
+   - 取り組む課題や機会の本質を明確にするための質問
+   - 前提条件や制約の特定
+
+2. **発散思考**
+   - 以下の創造的思考テクニックを使った自由なアイデア生成：
+     - ランダム刺激法（無関係な単語や画像から連想）
+     - 強制連結法（異なる概念の組み合わせ）
+     - 逆転思考（問題や常識を反転させる）
+     - 類推思考（他の分野からのインスピレーション）
+     - 「What if?」質問（制約や前提を取り払う）
+
+3. **収束思考**
+   - 生成されたアイデアの評価と選別
+   - 最も可能性のある案の特定
+   - 選ばれたアイデアの強化と発展
+
+4. **行動計画**
+   - 選択されたアイデアの実行に向けたステップ
+   - 潜在的な課題と解決策
+
+## アプローチの原則
+- 判断の先送り：初期段階では質より量を重視
+- 奇抜なアイデアの歓迎：常識や制約にとらわれない
+- 建設的な発展：「Yes, and...」の姿勢でアイデアを膨らませる
+- 多角的視点：様々な観点からの検討
+
+各ステップでは、私からの入力に基づいて、適切な質問やエクササイズを提案し、創造的なアイデア生成をサポートしてください。`,
+                relatedPrompts: [
+                    {
+                        id: "story-creation",
+                        title: "物語創作プロンプト",
+                        image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "content-marketing",
+                        title: "コンテンツマーケティング戦略立案",
+                        image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=600&h=400&auto=format&fit=crop"
+                    }
+                ]
+            },
+            // More prompt templates...
+            "code-optimization": {
+                title: "コード最適化アドバイザー",
+                category: "プログラミング",
+                description: "既存のコードをレビューし、パフォーマンス、可読性、保守性の観点から改善提案を行うための専門的なプロンプト。",
+                fullDescription: "このプロンプトを使用すると、Claudeが既存のコードを分析し、パフォーマンス、可読性、保守性、セキュリティの観点から詳細な改善提案を行います。コードの品質向上やリファクタリングに最適です。",
+                tags: ["コードレビュー", "リファクタリング", "パフォーマンス最適化", "コード品質"],
+                author: {
+                    name: "伊藤エンジニア",
+                    avatar: "https://randomuser.me/api/portraits/men/92.jpg",
+                    bio: "シニアソフトウェアエンジニア | テックリード | パフォーマンス最適化スペシャリスト"
+                },
+                stats: {
+                    views: "5.2k",
+                    likes: "428",
+                    saves: "312",
+                    uses: "3.1k"
+                },
+                premium: true,
+                image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=600&h=400&auto=format&fit=crop",
+                prompt: `以下のコードを分析し、最適化するための詳細なレビューと改善提案を行ってください：
+
+\`\`\`[言語名]
+[ここにコードを貼り付け]
+\`\`\`
+
+## コード分析
+まず、コードの目的と機能を理解した上で、全体的な構造と設計について解説してください。
+
+## 最適化提案
+以下の観点から具体的な改善提案を行ってください：
+
+### 1. パフォーマンス
+- 計算量（時間複雑度/空間複雑度）の分析
+- ボトルネックの特定
+- アルゴリズムや実装の効率化
+- メモリ使用量の最適化
+- 非同期処理やキャッシュの活用可能性
+
+### 2. 可読性とメンテナンス性
+- コード構造と整理
+- 命名規則とスタイル
+- コメントと文書化
+- 関数/メソッドの分割と責任の明確化
+- 重複コードの排除
+
+### 3. 堅牢性
+- エラーハンドリングの改善
+- 入力検証とエッジケースへの対応
+- テスト可能性の向上
+- デバッグのしやすさ
+
+### 4. セキュリティ（該当する場合）
+- 潜在的な脆弱性
+- セキュアなコーディングプラクティス
+- 入力サニタイズと検証
+
+## リファクタリング例
+最も重要な改善点について、具体的なリファクタリング例を示してください。「Before」と「After」の形式で、改善されたコードとその説明を提供してください。
+
+## ベストプラクティス
+この種類のコードに関連する業界のベストプラクティスや設計パターンを提案してください。
+
+評価は具体的かつ実用的であること、そして単なる批判ではなく建設的なフィードバックを提供することを心がけてください。`,
+                relatedPrompts: [
+                    {
+                        id: "paper-review",
+                        title: "研究論文レビューアシスタント",
+                        image: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=600&h=400&auto=format&fit=crop"
+                    },
+                    {
+                        id: "data-trends",
+                        title: "データトレンド解析プロンプト",
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&h=400&auto=format&fit=crop"
+                    }
+                ]
+            }
+        };
+        
+        // DOM elements
+        const promptGrid = document.getElementById('prompt-grid');
+        const promptList = document.getElementById('prompt-list');
+        const gridViewBtn = document.getElementById('grid-view');
+        const listViewBtn = document.getElementById('list-view');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        const closeModalBtn = document.getElementById('close-modal');
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const copyToast = document.getElementById('copy-toast');
+        const mobileToggle = document.getElementById('mobile-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenuBtn = document.getElementById('close-menu');
+        
+        // Event Listeners
+        
+        // Filter buttons
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Get filter value
+                const filter = button.dataset.filter;
+                
+                // Apply filter
+                filterPrompts(filter);
+            });
+        });
+        
+        // View toggle
+        gridViewBtn.addEventListener('click', () => {
+            gridViewBtn.classList.add('active');
+            listViewBtn.classList.remove('active');
+            promptGrid.style.display = 'grid';
+            promptList.style.display = 'none';
+        });
+        
+        listViewBtn.addEventListener('click', () => {
+            listViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+            promptGrid.style.display = 'none';
+            promptList.style.display = 'block';
+            
+            // Generate list view if it's empty
+            if (promptList.children.length === 0) {
+                generateListView();
+            }
+        });
+        
+        // Close modal
+        closeModalBtn.addEventListener('click', () => {
+            modalOverlay.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.style.display = 'none';
+            }
+        });
+        
+        // Mobile menu toggle
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+        
+        // Close mobile menu
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Generate list view for initial display
+            generateListView();
+            
+            // Add event listeners to "View Template" buttons
+            const viewButtons = document.querySelectorAll('.view-prompt-btn');
+            viewButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const promptId = button.dataset.id;
+                    openPromptModal(promptId);
+                });
+            });
+            
+            // Add event listeners to save buttons
+            const saveButtons = document.querySelectorAll('.save-btn');
+            saveButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const promptId = button.dataset.id;
+                    toggleSave(button, promptId);
+                });
+            });
+        });
+        
+        // Functions
+        
+        // Filter prompts by category
+        function filterPrompts(category) {
+            const promptCards = document.querySelectorAll('.prompt-card');
+            
+            promptCards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    if (card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Also update list view if it's active
+            if (listViewBtn.classList.contains('active')) {
+                generateListView(category);
+            }
+        }
+        
+        // Generate list view
+        function generateListView(category = 'all') {
+            // Clear list view
+            promptList.innerHTML = '';
+            
+            // Loop through prompt cards
+            const promptCards = document.querySelectorAll('.prompt-card');
+            
+            promptCards.forEach(card => {
+                // Skip if filtered out
+                if (category !== 'all' && card.dataset.category !== category) {
+                    return;
+                }
+                
+                // Get data from card
+                const image = card.querySelector('.card-image img').src;
+                const title = card.querySelector('.card-title').textContent;
+                const description = card.querySelector('.card-description').textContent;
+                const category = card.querySelector('.card-category').textContent;
+                const promptId = card.querySelector('.view-prompt-btn').dataset.id;
+                const isSaved = card.querySelector('.save-btn').classList.contains('saved');
+                
+                // Create list item
+                const listItem = document.createElement('div');
+                listItem.className = 'list-item';
+                
+                listItem.innerHTML = `
+                    <div class="list-image">
+                        <img src="${image}" alt="${title}">
+                    </div>
+                    <div class="list-content">
+                        <h3 class="list-title">${title}</h3>
+                        <p class="list-description">${description}</p>
+                        <div class="list-meta">
+                            <span class="list-category">${category}</span>
+                        </div>
+                    </div>
+                    <div class="list-actions">
+                        <button class="view-prompt-btn" data-id="${promptId}">テンプレートを見る</button>
+                        <button class="save-btn ${isSaved ? 'saved' : ''}" data-id="${promptId}">
+                            <i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // Add event listeners
+                listItem.querySelector('.view-prompt-btn').addEventListener('click', () => {
+                    openPromptModal(promptId);
+                });
+                
+                listItem.querySelector('.save-btn').addEventListener('click', (e) => {
+                    toggleSave(e.currentTarget, promptId);
+                });
+                
+                // Add to list
+                promptList.appendChild(listItem);
+            });
+        }
+        
+        // Open prompt modal
+        function openPromptModal(promptId) {
+            const promptData = promptTemplates[promptId];
+            
+            if (!promptData) {
+                return;
+            }
+            
+            // Set modal title
+            document.querySelector('.modal-title').textContent = promptData.title;
+            
+            // Generate modal content
+            modalContent.innerHTML = `
+                <div class="prompt-details">
+                    <div class="prompt-main">
+                        <div class="prompt-description-full">
+                            ${promptData.fullDescription}
+                        </div>
+                        <div class="prompt-tags">
+                            ${promptData.tags.map(tag => `<span class="prompt-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="prompt-preview">
+                            ${promptData.prompt.replace(/\n/g, '<br>')}
+                            <button class="copy-btn" data-prompt="${promptId}">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="related-prompts">
+                            <h3>関連プロンプト</h3>
+                            <div class="related-list">
+                                ${promptData.relatedPrompts.map(related => `
+                                    <div class="related-item" data-id="${related.id}">
+                                        <div class="related-image">
+                                            <img src="${related.image}" alt="${related.title}">
+                                        </div>
+                                        <div class="related-title">${related.title}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prompt-sidebar">
+                        <div class="prompt-author">
+                            <img src="${promptData.author.avatar}" alt="${promptData.author.name}" class="author-avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+                            <div class="author-info">
+                                <h4>${promptData.author.name}</h4>
+                                <p>${promptData.author.bio}</p>
+                            </div>
+                        </div>
+                        <div class="prompt-stats-full">
+                            <div class="stat-item">
+                                <div class="stat-value">${promptData.stats.views}</div>
+                                <div class="stat-name">閲覧数</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${promptData.stats.likes}</div>
+                                <div class="stat-name">いいね</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${promptData.stats.saves}</div>
+                                <div class="stat-name">保存</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${promptData.stats.uses}</div>
+                                <div class="stat-name">使用回数</div>
+                            </div>
+                        </div>
+                        <div class="prompt-actions">
+                            <button class="action-btn primary copy-action" data-prompt="${promptId}">
+                                <i class="far fa-copy"></i> プロンプトをコピー
+                            </button>
+                            <button class="action-btn secondary save-action" data-id="${promptId}">
+                                <i class="far fa-bookmark"></i> 保存する
+                            </button>
+                            ${promptData.premium ? `
+                            <a href="#premium" class="action-btn primary">
+                                <i class="fas fa-crown"></i> プレミアムを入手
+                            </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to copy buttons
+            const copyButtons = modalContent.querySelectorAll('.copy-btn, .copy-action');
+            copyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    copyPromptToClipboard(button.dataset.prompt);
+                });
+            });
+            
+            // Add event listeners to save button
+            const saveAction = modalContent.querySelector('.save-action');
+            if (saveAction) {
+                saveAction.addEventListener('click', () => {
+                    toggleSave(saveAction, saveAction.dataset.id);
+                });
+            }
+            
+            // Add event listeners to related prompts
+            const relatedItems = modalContent.querySelectorAll('.related-item');
+            relatedItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    openPromptModal(item.dataset.id);
+                });
+            });
+            
+            // Show modal
+            modalOverlay.style.display = 'flex';
+        }
+        
+        // Copy prompt to clipboard
+        function copyPromptToClipboard(promptId) {
+            const promptData = promptTemplates[promptId];
+            
+            if (!promptData) {
+                return;
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(promptData.prompt)
+                .then(() => {
+                    // Show toast
+                    copyToast.classList.add('show');
+                    
+                    // Hide toast after 3 seconds
+                    setTimeout(() => {
+                        copyToast.classList.remove('show');
+                    }, 3000);
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+        
+        // Toggle save button
+        function toggleSave(button, promptId) {
+            // Toggle saved class
+            button.classList.toggle('saved');
+            
+            // Update icon
+            const icon = button.querySelector('i');
+            if (button.classList.contains('saved')) {
+                icon.className = 'fas fa-bookmark';
+                showToast('プロンプトを保存しました');
+            } else {
+                icon.className = 'far fa-bookmark';
+                showToast('保存を解除しました');
+            }
+            
+            // Save to local storage
+            saveToLocalStorage(promptId, button.classList.contains('saved'));
+            
+            // Update all instances of the save button for this prompt
+            updateSaveButtons(promptId, button.classList.contains('saved'));
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                
+                // Remove toast after animation
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Save to local storage
+        function saveToLocalStorage(promptId, isSaved) {
+            // Get saved prompts from local storage
+            const savedPrompts = JSON.parse(localStorage.getItem('savedPrompts')) || {};
+            
+            // Update saved prompts
+            if (isSaved) {
+                savedPrompts[promptId] = true;
+            } else {
+                delete savedPrompts[promptId];
+            }
+            
+            // Save to local storage
+            localStorage.setItem('savedPrompts', JSON.stringify(savedPrompts));
+        }
+        
+        // Update all save buttons for a prompt
+        function updateSaveButtons(promptId, isSaved) {
+            const saveButtons = document.querySelectorAll(`.save-btn[data-id="${promptId}"]`);
+            
+            saveButtons.forEach(button => {
+                if (isSaved) {
+                    button.classList.add('saved');
+                    button.querySelector('i').className = 'fas fa-bookmark';
+                } else {
+                    button.classList.remove('saved');
+                    button.querySelector('i').className = 'far fa-bookmark';
+                }
+            });
+        }
+        
+        // Load saved prompts from local storage
+        function loadSavedPrompts() {
+            const savedPrompts = JSON.parse(localStorage.getItem('savedPrompts')) || {};
+            
+            // Update save buttons
+            for (const promptId in savedPrompts) {
+                updateSaveButtons(promptId, true);
+            }
+        }
+        
+        // Load saved prompts on page load
+        loadSavedPrompts();
